@@ -5,7 +5,7 @@ import pyqtgraph as pg
 from PyQt5.QtWidgets import QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pyqtgraph import PlotWidget
-from .ui.main_window import Ui_MainWindow
+from .ui.main_window2 import Ui_MainWindow
 
 log = logging.getLogger(__name__)
 
@@ -32,11 +32,11 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
         self.refLineEdit.setValidator(self.onlyInt)
         self.dbLineEdit.setValidator(self.onlyInt)
 
+
         self.graphWidget.setBackground('w')
         self.graphWidget.plot([0], [0])
 
     def create_plot(self):
-        # self.graphWidget = pg.PlotWidget()
         hour = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         temperature = [30, 32, 34, 32, 33, 31, 29, 32, 35, 45]
         print(self.graphWidget.plot(hour, temperature))
@@ -48,6 +48,7 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
         fstop = int(self.fstopLineEdit.text())
         fstep = int(self.fstepLineEdit.text())
         fbw = int(self.fbwLineEdit.text())
+
 
         freqs = [fstart, fstop, fstep, fbw]
         self.send_frequencies.emit(freqs)
