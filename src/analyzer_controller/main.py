@@ -25,16 +25,26 @@ class AnalyzerController(QtWidgets.QMainWindow, QtWidgets.QWidget):
         self.model = MainModel()
 
         # Connections
+
         # view to model
+        self.analyzer_widget.send_type_analyzer.connect(self.model.connect_analyzer)
+        self.analyzer_widget.send_type_generator.connect(self.model.connect_generator)
+
         self.analyzer_widget.send_frequencies.connect(self.model.set_frequencies)
-        self.analyzer_widget.send_ref.connect(self.model.set_ref)
-        self.analyzer_widget.send_db.connect(self.model.set_db)
+        self.analyzer_widget.send_freq_sweep.connect(self.model.set_freq_sweep)
+        self.analyzer_widget.send_power_sweep.connect(self.model.set_power_sweep)
+
+        self.analyzer_widget.send_path_csv.connect(self.model.load_data)
 
         # view to main
 
         # view to view
 
         # model to view
+        self.model.send_axis.connect(self.analyzer_widget.create_plot)
+        # self.model.send_axis.connect(self.analyzer_widget.create_plot)
+        self.model.send_analyzer_name.connect(self.analyzer_widget.set_analyzer_name)
+        self.model.send_generator_name.connect(self.analyzer_widget.set_generator_name)
 
         # model to main
 
