@@ -28,7 +28,13 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
 
         self.init_plot()
         self.init_input_types()
-        self.singleCheckBox.setChecked(True)
+        # self.singleCheckBox.setChecked(True)
+
+        # self.set_mode()
+        self.singleCheckBox.toggled.connect(lambda: self.continuousCheckBox.setChecked(False))
+        self.singleCheckBox.toggled.connect(self.set_mode)
+        self.continuousCheckBox.toggled.connect(lambda: self.singleCheckBox.setChecked(False))
+        self.continuousCheckBox.toggled.connect(self.set_mode)
 
         self.analyzerConnectButton.clicked.connect(self.get_type_analyzer)
         self.generatorConnectButton.clicked.connect(self.get_type_generator)
@@ -40,8 +46,6 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
         self.dbButton.clicked.connect(self.get_db)
 
         self.actionLoad.triggered.connect(self.load_data_csv)
-        # self.continouseCheckBox.isChecked.connect(self.)
-        # self.singleCheckBox.isChecked.connect(self.)
 
 
         # hours = [30, 32, 34, 32, 33, 31, 29, 32, 35, 45]
@@ -52,6 +56,12 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
         # self.timer.setInterval(50)
         # self.timer.timeout.connect(self.update_plot_data)
         # self.timer.start()
+
+    def set_mode(self):
+        if self.singleCheckBox.isChecked():
+            print("single mode")
+        if self.continuousCheckBox.isChecked():
+            print("continuous mode")
 
     def load_data_csv(self):
         """
