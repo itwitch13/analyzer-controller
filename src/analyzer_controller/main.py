@@ -53,6 +53,9 @@ class AnalyzerController(QtWidgets.QMainWindow, QtWidgets.QWidget):
         # model to main
 
     def set_contin_mode(self):
+        """
+        Sets continuous mode that updates plot every 200ms.
+        """
         self.timer = QtCore.QTimer()
         self.timer.setInterval(200)
         self.timer.timeout.connect(self.model.update_plot)
@@ -61,7 +64,11 @@ class AnalyzerController(QtWidgets.QMainWindow, QtWidgets.QWidget):
             self.timer.stop()
 
     def set_single_mode(self):
+        """
+        Sets single mode that updates plot just once.
+        """
         self.model.update_plot()
+
 
 def myExceptionhook(exc_type, exc_value, exc_traceback):
     log.critical("Unexpected exception occurred!",

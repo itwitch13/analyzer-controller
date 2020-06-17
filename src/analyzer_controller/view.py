@@ -52,6 +52,9 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
         self.send_path_csv.emit(pathlib.Path(csv_path))
 
     def init_plot(self):
+        """
+        Initializes plot with specific properties.
+        """
         self.graphWidget.setBackground('w')
         self.graphWidget.plot([0], [0], pen='r')
 
@@ -83,6 +86,11 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
         self.generatorLineEdit.setText(device_name)
 
     def create_plot(self, xaxis, yaxis):
+        """
+        Creates new plot with given x and y axis.
+        :param xaxis: list of values on x axis
+        :param yaxis: list of values on y axis
+        """
         self.graphWidget.clear()
         self.graphWidget.plot(xaxis, yaxis)
 

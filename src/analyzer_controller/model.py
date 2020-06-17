@@ -23,16 +23,23 @@ class MainModel(QWidget):
         self.send_generator_name.emit(device)
 
     def update_plot(self):
+        """
+        Send signal to updates plot.
+        """
         self.yaxis = self.generate_y(len(self.xaxis))
         self.send_axis.emit(self.xaxis, self.yaxis)
 
     def load_data(self, path):
+        """
+        Gets data from csv file and  creates plot.
+        :param path: path to csv file with data
+        """
         if path.suffix == ".csv":
             self.df_dbm = pd.read_csv(str(path))
-            self.xaxis = list(self.df_dbm.columns.values)
+            xaxis = list(self.df_dbm.columns.values)
+            self.xaxis = [float(i) for i in xaxis]
             self.yaxis = self.df_dbm.values.tolist()[0]
-        print(self.xaxis)
-        print(self.yaxis)
+
         self.send_axis.emit(self.xaxis, self.yaxis)
 
     def set_frequencies(self, freqs):
