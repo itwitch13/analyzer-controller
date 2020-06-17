@@ -27,6 +27,8 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
         self.input_types_analyzer = ["USB0::2733::205::101274::0"]
         self.input_types_generator = ["TCPIP::169.254.2.20::hislip0::INSTR"]
 
+        # SET FREQUENCIES, PLOT, INPUT
+        self.init_frequencies()
         self.init_plot()
         self.init_input_types()
 
@@ -128,3 +130,18 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
     def get_db(self):
         db = int(self.dbLineEdit.text())
 
+    def init_frequencies(self):
+        self.fstartLineEdit.setText(str(0))
+        self.fstopLineEdit.setText(str(20))
+        self.fstepLineEdit.setText(str(1))
+        self.fbwLineEdit.setText(str(0))
+
+        self.fstartLineEdit_2.setText(str(0))
+        self.fstopLineEdit_2.setText(str(20))
+        self.fstepLineEdit_2.setText(str(1))
+        self.fbwLineEdit_2.setText(str(0))
+
+        self.fstartLineEdit_3.setText(str(0))
+        self.fstopLineEdit_3.setText(str(20))
+        self.fstepLineEdit_3.setText(str(1))
+        self.fbwLineEdit_3.setText(str(0))

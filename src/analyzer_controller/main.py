@@ -25,6 +25,7 @@ class AnalyzerController(QtWidgets.QMainWindow, QtWidgets.QWidget):
         self.model = MainModel()
 
         # Connections
+
         self.analyzer_widget.singleCheckBox.toggled.connect(lambda: self.analyzer_widget.continuousCheckBox.setChecked(False))
         self.analyzer_widget.singleCheckBox.toggled.connect(self.set_single_mode)
         self.analyzer_widget.continuousCheckBox.toggled.connect(lambda: self.analyzer_widget.singleCheckBox.setChecked(False))
@@ -57,7 +58,7 @@ class AnalyzerController(QtWidgets.QMainWindow, QtWidgets.QWidget):
         Sets continuous mode that updates plot every 200ms.
         """
         self.timer = QtCore.QTimer()
-        self.timer.setInterval(200)
+        self.timer.setInterval(1000)
         self.timer.timeout.connect(self.model.update_plot)
         self.timer.start()
         if not self.analyzer_widget.continuousCheckBox.isChecked():
@@ -68,6 +69,7 @@ class AnalyzerController(QtWidgets.QMainWindow, QtWidgets.QWidget):
         Sets single mode that updates plot just once.
         """
         self.model.update_plot()
+        self.analyzer_widget.singleCheckBox.setChecked(False)
 
 
 def myExceptionhook(exc_type, exc_value, exc_traceback):
