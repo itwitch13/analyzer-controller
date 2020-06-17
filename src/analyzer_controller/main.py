@@ -25,6 +25,11 @@ class AnalyzerController(QtWidgets.QMainWindow, QtWidgets.QWidget):
         self.model = MainModel()
 
         # Connections
+        self.analyzer_widget.singleCheckBox.toggled.connect(lambda: self.analyzer_widget.continuousCheckBox.setChecked(False))
+        self.analyzer_widget.singleCheckBox.toggled.connect(self.set_single_mode)
+        self.analyzer_widget.continuousCheckBox.toggled.connect(lambda: self.analyzer_widget.singleCheckBox.setChecked(False))
+        self.analyzer_widget.continuousCheckBox.toggled.connect(self.set_contin_mode)
+
 
         # view to model
         self.analyzer_widget.send_type_analyzer.connect(self.model.connect_analyzer)
@@ -42,13 +47,21 @@ class AnalyzerController(QtWidgets.QMainWindow, QtWidgets.QWidget):
 
         # model to view
         self.model.send_axis.connect(self.analyzer_widget.create_plot)
-        # self.model.send_axis.connect(self.analyzer_widget.create_plot)
         self.model.send_analyzer_name.connect(self.analyzer_widget.set_analyzer_name)
         self.model.send_generator_name.connect(self.analyzer_widget.set_generator_name)
 
         # model to main
 
+    def set_contin_mode(self):
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(200)
+        self.timer.timeout.connect(self.model.update_plot)
+        self.timer.start()
+        if not self.analyzer_widget.continuousCheckBox.isChecked():
+            self.timer.stop()
 
+    def set_single_mode(self):
+        self.model.update_plot()
 
 def myExceptionhook(exc_type, exc_value, exc_traceback):
     log.critical("Unexpected exception occurred!",

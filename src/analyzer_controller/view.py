@@ -1,6 +1,5 @@
 import logging
 import pathlib
-from random import randint
 
 from PyQt5.QtWidgets import QWidget, QMenuBar
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -18,6 +17,8 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
     send_path_csv = QtCore.pyqtSignal(object)
     send_type_analyzer = QtCore.pyqtSignal(str, str)
     send_type_generator = QtCore.pyqtSignal(str, str)
+    send_single_mode = QtCore.pyqtSignal()
+    send_mode = QtCore.pyqtSignal(str)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -28,13 +29,6 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
 
         self.init_plot()
         self.init_input_types()
-        # self.singleCheckBox.setChecked(True)
-
-        # self.set_mode()
-        self.singleCheckBox.toggled.connect(lambda: self.continuousCheckBox.setChecked(False))
-        self.singleCheckBox.toggled.connect(self.set_mode)
-        self.continuousCheckBox.toggled.connect(lambda: self.singleCheckBox.setChecked(False))
-        self.continuousCheckBox.toggled.connect(self.set_mode)
 
         self.analyzerConnectButton.clicked.connect(self.get_type_analyzer)
         self.generatorConnectButton.clicked.connect(self.get_type_generator)
@@ -48,40 +42,29 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
         self.actionLoad.triggered.connect(self.load_data_csv)
 
 
-        # hours = [30, 32, 34, 32, 33, 31, 29, 32, 35, 45]
-        # temperature = [30, 32, 34, 32, 33, 31, 29, 32, 35, 45]
-        # self.graphWidget.plot(hours, temperature)
-
-        # self.timer = QtCore.QTimer()
-        # self.timer.setInterval(50)
-        # self.timer.timeout.connect(self.update_plot_data)
-        # self.timer.start()
-
-    def set_mode(self):
-        if self.singleCheckBox.isChecked():
-            print("single mode")
-        if self.continuousCheckBox.isChecked():
-            print("continuous mode")
-
     def load_data_csv(self):
         """
         Opens QFileDialog and sends chosen file directory as pathlib.Path object
         """
         csv_path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Choose csv File", "", "Video File (" "*.csv)"
+            self, "Choose csv File", "", "File (" "*.csv)"
         )
         self.send_path_csv.emit(pathlib.Path(csv_path))
 
     def init_plot(self):
-
         self.graphWidget.setBackground('w')
         self.graphWidget.plot([0], [0], pen='r')
-        # self.graphWidget.setTitle("ref_TL", color='blue', size=30)
+
         # Add Axis Labels
-        self.graphWidget.setLabel('left', 'Spectral power [dBm]', color='black', size=2000)
-        self.graphWidget.setLabel('bottom', 'Siggen freq [GHz]', color='black', size=80)
+        self.graphWidget.setTitle("ref_TL", color="b", size="30pt")
+        styles = {"color": "#f00", "font-size": "20px"}
+        self.graphWidget.setLabel('left', 'Spectral power [dBm]', **styles)
+        self.graphWidget.setLabel('bottom', 'Siggen freq [GHz]', **styles)
 
     def init_input_types(self):
+        """
+        Initializes types of device
+        """
         self.analyzerComboBox.addItems(self.input_types_analyzer)
         self.generatorComboBox.addItems(self.input_types_generator)
 
@@ -99,19 +82,9 @@ class AnalyzerWindowWidget(QWidget, Ui_MainWindow):
     def set_generator_name(self, device_name):
         self.generatorLineEdit.setText(device_name)
 
-    def update_plot_data(self):
-        self.x = self.x[1:]  # Remove the first y element.
-        self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
-
-        self.y = self.y[1:]  # Remove the first
-        self.y.append(randint(0, 100))  # Add a new random value.
-
-        self.graphWidget.setData(self.x, self.y)  # Update the data.
-
-    def create_plot(self, xaxis):
-
-        # plot data: x, y values
-        self.graphWidget.plot(xaxis, xaxis)
+    def create_plot(self, xaxis, yaxis):
+        self.graphWidget.clear()
+        self.graphWidget.plot(xaxis, yaxis)
 
     def get_frequencies(self):
         freqs_dict = {}
