@@ -1,5 +1,5 @@
 import pyvisa
-import VISAresourceExtentions
+from .VISAresourceExtentions import *
 
 
 class DeviceCommunicator(object):
@@ -27,7 +27,7 @@ class DeviceCommunicator(object):
     def connect_analyzer(self):
         # Connect to instruments
         rm = pyvisa.ResourceManager('@py')
-        self.specan = rm.open_resource('USB0::2733::110::104791::0::INSTR')
+        self.specan = rm.open_resource('USB0::2733::205::101274::0')
         try:
             self.specan.timeout = 3000  # Timeout for VISA Read Operations
             self.specan_idn = self.specan.query('*IDN?')
@@ -98,3 +98,23 @@ class DeviceCommunicator(object):
 
         except Exception as e:
                 print("Error: ", e)
+
+    def set_frequencies_analyzer(self, freqs):
+        try:
+            print("freq sweep: ", freqs)
+            self.siggen.ext_clear_status()
+            self.siggen.write('*RST;*CLS')  # Reset the instrument, clear the Error queue
+            # siggen.Write('OUTPut1:STATe 0')    # Turn off the RF output
+            self.siggen.ext_error_checking()  # Error Checking after Initialization block
+            # -----------------------------------------------------------
+            # self.siggen.write('FREQuency:MODE LIST')
+            self.siggen.write('FREQuency:STARt {}'.format(freqs['fstart']))
+            self.siggen.write('FREQuency:STOP {}'.format(freqs['fstop']))
+            self.siggen.write('FREQuency:SPAN {}'.format(freqs['fstep']))
+
+            # self.siggen.write('LIST:DWELL {}'.format(freqs['time']))
+            self.siggen.ext_error_checking()  # Error Checking after Basic Settings block
+            # self.siggen.close()  # Closing the session to the instrument
+
+        except Exception as e:
+            print("Error: ", e)
